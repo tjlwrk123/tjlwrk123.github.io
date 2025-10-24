@@ -20,8 +20,10 @@ function resetAndRender() {
 // all of your apply functions
 function applyAndRender() {
   // Multiple TODOs: Call your apply function(s) here
-
-  
+  applyFilter(increaseGreenByBlue);
+  applyFilterNoBackground(reddify);
+  applyFilter(reddify);
+  applyFilterNoBackground(decreaseBlue);
 
   // do not change the below line of code
   render($("#display"), image);
@@ -33,17 +35,71 @@ function applyAndRender() {
 
 // TODO 1, 2, 3 & 5: Create the applyFilter function here
 
+function applyFilter(filterFunction) {
+  for (var i = 0; i < image.length; i++) {
+    for (var j = 0; j < image[i].length; j++) {
+      // This is where I’ll modify the color values later
+
+      var pixel = image[i][j];
+
+      var pixelArray = rgbStringToArray(pixel);
+      filterFunction(pixelArray);
+      var updatePixel = rgbArrayToString(pixelArray);
+
+      image[i][j] = updatePixel;
+    }
+  }
+}
 
 // TODO 9 Create the applyFilterNoBackground function
 
+function applyFilterNoBackground(filterFunction) {
+  var backgroundColor = image[0][0];
+
+  for (var i = 0; i < image.length; i++) {
+    for (var j = 0; j < image[i].length; j++) {
+      // This is where I’ll modify the color values later
+
+      var pixel = image[i][j];
+      if (image[i][j] !== backgroundColor) {
+        var pixelArray = rgbStringToArray(pixel);
+        filterFunction(pixelArray);
+        var updatePixel = rgbArrayToString(pixelArray);
+
+        image[i][j] = updatePixel;
+      }
+    }
+  }
+}
 
 // TODO 6: Create the keepInBounds function
 
+function keepInBounds(number) {
+  if (number < 0) {
+    return 0;
+  }
+
+  if (number > 255) {
+    return 255;
+  }
+
+  return number;
+}
 
 // TODO 4: Create reddify filter function
 
+function reddify(pixelArray) {
+  pixelArray[RED] = 200;
+}
 
 // TODO 7 & 8: Create more filter functions
 
+function decreaseBlue(pixelArray) {
+  pixelArray[BLUE] = keepInBounds(pixelArray[BLUE] - 50);
+}
+
+function increaseGreenByBlue(pixelArray) {
+  pixelArray[GREEN] = keepInBounds(pixelArray[BLUE] + pixelArray[GREEN]);
+}
 
 // CHALLENGE code goes below here
